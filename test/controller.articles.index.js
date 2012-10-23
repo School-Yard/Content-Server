@@ -3,14 +3,17 @@ var setup = require('./support/setup'),
     request = require('supertest'),
     should = require('should');
 
-var app;
+var app, Page;
 
-before(function(done) {
+beforeEach(function(done) {
   setup.Setup(function(result) {
     app = result;
 
     app.on('ready', function() {
-      done();
+      helpers.createPage(app, { name: 'test', slug: 'test-slug' }, function(err, page) {
+        Page = page;
+        done();
+      });
     });
 
     app.create();
@@ -18,18 +21,18 @@ before(function(done) {
 });
 
 afterEach(function() {
-  setup.Teardown(app, 'pages');
+  setup.Teardown(app, ['pages', 'articles']);
 });
 
-describe('Pages', function() {
+describe('Articles', function() {
   describe('#index', function() {
     describe('with records', function() {
       var api_response;
 
-      before(function(done) {
-        helpers.createPage(app, { name: 'test', slug: 'test' }, function(err, page) {
+      beforeEach(function(done) {
+        helpers.createArticle(app, { page_id: Page.id, title: 'test', slug: 'test' }, function(err, article) {
           request(app)
-          .get('/api/v1/pages')
+          .get('/api/v1/pages/' + Page.id + '/articles')
           .end(function(err, res){
             api_response = res;
             done();
@@ -53,7 +56,7 @@ describe('Pages', function() {
 
       it('should return a a single record', function() {
         var obj = JSON.parse(api_response.text)[0];
-        obj.should.have.property('name');
+        obj.should.have.property('title');
         obj.should.have.property('slug');
         obj.should.have.property('id');
       });

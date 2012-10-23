@@ -3,14 +3,17 @@ var setup = require('./support/setup'),
     request = require('supertest'),
     should = require('should');
 
-var app;
+var app, Page;
 
-before(function(done) {
+beforeEach(function(done) {
   setup.Setup(function(result) {
     app = result;
 
     app.on('ready', function() {
-      done();
+      helpers.createPage(app, { name: 'test', slug: 'test-slug' }, function(err, page) {
+        Page = page;
+        done();
+      });
     });
 
     app.create();
@@ -18,19 +21,19 @@ before(function(done) {
 });
 
 afterEach(function() {
-  setup.Teardown(app, 'pages');
+  setup.Teardown(app, ['pages', 'articles']);
 });
 
-describe('Pages', function() {
+describe('Articles', function() {
   describe('#update', function() {
     describe('with no body attributes', function() {
       var api_response;
 
       // Make the request and store the response
-      before(function(done) {
-        helpers.createPage(app, { name: 'test', slug: 'test' }, function(err, page) {
+      beforeEach(function(done) {
+        helpers.createArticle(app, { page_id: Page.id, title: 'test', slug: 'test' }, function(err, article) {
           request(app)
-          .put('/api/v1/pages/' + page.id)
+          .put('/api/v1/pages/' + Page.id + '/articles/' + article.id)
           .set('content-type', 'application/json')
           .end(function(err, res){
             api_response = res;
@@ -53,11 +56,11 @@ describe('Pages', function() {
       var api_response;
 
       // Make the request and store the response
-      before(function(done) {
-        helpers.createPage(app, { name: 'test', slug: 'test' }, function(err, page) {
+      beforeEach(function(done) {
+        helpers.createArticle(app, { page_id: Page.id, title: 'test', slug: 'test' }, function(err, article) {
           request(app)
-          .put('/api/v1/pages/' + page.id)
-          .send({ name: 'test updated' })
+          .put('/api/v1/pages/' + Page.id + '/articles/' + article.id)
+          .send({ title: 'test updated' })
           .set('content-type', 'application/json')
           .end(function(err, res){
             api_response = res;
@@ -76,7 +79,7 @@ describe('Pages', function() {
 
       it('should return the updated json object', function() {
         var obj = JSON.parse(api_response.text);
-        obj.name.should.equal('test updated');
+        obj.title.should.equal('test updated');
       });
     });
 
@@ -84,11 +87,11 @@ describe('Pages', function() {
       var api_response;
 
       // Make the request and store the response
-      before(function(done) {
-        helpers.createPage(app, { name: 'test', slug: 'test' }, function(err) {
-          helpers.createPage(app, { name: 'test', slug: 'test2' }, function(err, page) {
+      beforeEach(function(done) {
+        helpers.createArticle(app, { page_id: Page.id, title: 'test', slug: 'test' }, function(err) {
+          helpers.createArticle(app, { page_id: Page.id, title: 'test', slug: 'test2' }, function(err, article) {
             request(app)
-            .put('/api/v1/pages/' + page.id)
+            .put('/api/v1/pages/' + Page.id + '/articles/' + article.id)
             .send({ slug: 'test' })
             .set('content-type', 'application/json')
             .end(function(err, res){

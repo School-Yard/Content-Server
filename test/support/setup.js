@@ -48,8 +48,11 @@ function create_category(db, cb) {
 
 exports.Teardown = function(app, namespace) {
   var keys = Object.keys(app.conn.store);
+
+  var keyspace = namespace.constructor === Array ? namespace : [namespace];
+
   for(var i = 0; i < keys.length; i++) {
-    if(keys[i].split(':')[0] === namespace) {
+    if(keyspace.indexOf(keys[i].split(':')[0]) >= 0) {
       delete app.conn.store[keys[i]];
     }
   }

@@ -1,15 +1,19 @@
 var setup = require('./support/setup'),
+    helpers = require('./support/helpers'),
     request = require('supertest'),
     should = require('should');
 
-var app;
+var app, Page;
 
-before(function(done) {
+beforeEach(function(done) {
   setup.Setup(function(result) {
     app = result;
 
     app.on('ready', function() {
-      done();
+      helpers.createPage(app, { name: 'test', slug: 'test-slug' }, function(err, page) {
+        Page = page;
+        done();
+      });
     });
 
     app.create();
@@ -17,18 +21,18 @@ before(function(done) {
 });
 
 afterEach(function() {
-  setup.Teardown(app, 'pages');
+  setup.Teardown(app, ['pages', 'articles']);
 });
 
-describe('Pages', function() {
+describe('Articles', function() {
   describe('#create', function() {
     describe('with no body attributes', function() {
       var api_response;
 
       // Make the request and store the response
-      before(function(done) {
+      beforeEach(function(done) {
         request(app)
-        .post('/api/v1/pages')
+        .post('/api/v1/pages/' + Page.id + '/articles')
         .set('content-type', 'application/json')
         .end(function(err, res){
           api_response = res;
@@ -46,10 +50,10 @@ describe('Pages', function() {
       var api_response;
 
       // Make the request and store the response
-      before(function(done) {
+      beforeEach(function(done) {
         request(app)
-        .post('/api/v1/pages')
-        .send({ name: 'test', slug: 'test slug' })
+        .post('/api/v1/pages/' + Page.id + '/articles')
+        .send({ title: 'test', slug: 'test slug' })
         .set('content-type', 'application/json')
         .end(function(err, res){
           api_response = res;
@@ -67,7 +71,7 @@ describe('Pages', function() {
 
       it('should return a json object', function() {
         var obj = JSON.parse(api_response.text);
-        obj.should.have.property('name');
+        obj.should.have.property('title');
         obj.should.have.property('slug');
         obj.should.have.property('id');
       });
@@ -82,9 +86,9 @@ describe('Pages', function() {
       var api_response;
 
       // Make the request and store the response
-      before(function(done) {
+      beforeEach(function(done) {
         request(app)
-        .post('/api/v1/pages')
+        .post('/api/v1/pages/' + Page.id + '/articles')
         .send({ name: 'test' })
         .set('content-type', 'application/json')
         .end(function(err, res){
@@ -103,7 +107,7 @@ describe('Pages', function() {
 
       it('should respond with an error', function() {
         var obj = JSON.parse(api_response.text);
-        obj.error.should.equal('Invalid Page data');
+        obj.error.should.equal('Invalid Article data');
       });
     });
 

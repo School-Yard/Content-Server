@@ -1,0 +1,38 @@
+{
+  "name": "schoolyard-content",
+  "description": "A Content API for use with Card-Catalog",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Cody Stoltman <particlebanana@gmail.com>",
+  "maintainers" : [
+    "particlebanana <particlebanana@gmail.com>",
+    "vanetix <matmcfarland@gmail.com>"
+  ],
+  "url": "",
+  "keywords": ["content api", "cardcatalog"],
+  "license" : "MIT",
+  "dependencies": {
+    "cardcatalog": "0.0.x",
+    "validator": "0.4.x",
+    "slug": "0.2.x"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "trapperkeeper": "*",
+    "supertest": "*",
+    "schoolyard-recess": "*",
+    "connect": "*"
+  },
+  "scripts": {
+    "test": "mocha ./test_runner.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "main": "",
+  "engines": {
+    "node": ">=0.6.x"
+  }
+}

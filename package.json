@@ -25,13 +25,13 @@
     "connect": "*"
   },
   "scripts": {
-    "test": "mocha ./test_runner.js"
+    "test": "mocha test/**"
   },
   "repository": {
     "type": "git",
     "url": ""
   },
-  "main": "",
+  "main": "./lib",
   "engines": {
     "node": ">=0.6.x"
   }

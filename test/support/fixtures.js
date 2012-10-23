@@ -5,10 +5,10 @@
  */
 
 var db = require('./utils').db,
-    PageModel = require('../../lib/v1/models/page'),
+    BucketModel = require('../../lib/v1/models/bucket'),
     ArticleModel = require('../../lib/v1/models/article');
 
-exports.Page = function Page(callback) {
+exports.Bucket = function Page(callback) {
   db(function(conn) {
     var options = {
       adapters: {
@@ -16,7 +16,7 @@ exports.Page = function Page(callback) {
       }
     };
 
-    var model = new PageModel(options);
+    var model = new BucketModel(options);
     callback(model);
   });
 };

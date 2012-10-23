@@ -25,7 +25,7 @@
     "connect": "*"
   },
   "scripts": {
-    "test": "mocha test/**"
+    "test": "mocha test/**/**"
   },
   "repository": {
     "type": "git",

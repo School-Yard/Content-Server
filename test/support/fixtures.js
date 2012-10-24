@@ -6,7 +6,7 @@
 
 var db = require('./utils').db,
     BucketModel = require('../../lib/v1/models/bucket'),
-    ArticleModel = require('../../lib/v1/models/article');
+    ItemModel = require('../../lib/v1/models/item');
 
 exports.Bucket = function Page(callback) {
   db(function(conn) {
@@ -21,7 +21,7 @@ exports.Bucket = function Page(callback) {
   });
 };
 
-exports.Article = function Article(callback) {
+exports.Item = function Item(callback) {
   db(function(conn) {
     var options = {
       adapters: {
@@ -29,7 +29,7 @@ exports.Article = function Article(callback) {
       }
     };
 
-    var model = new ArticleModel(options);
+    var model = new ItemModel(options);
     callback(model);
   });
 };

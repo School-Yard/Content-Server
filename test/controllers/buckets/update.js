@@ -1,98 +1,92 @@
-var setup = require('./support/setup'),
-    helpers = require('./support/helpers'),
+var helpers = require('../../support/helpers'),
     request = require('supertest'),
     should = require('should');
 
-var app;
+describe('Buckets', function() {
+  var app;
 
-before(function(done) {
-  setup.Setup(function(result) {
-    app = result;
-
-    app.on('ready', function() {
+  before(function(done) {
+    helpers.buildServer(function(connection, server) {
+      app = server;
       done();
     });
-
-    app.create();
   });
-});
 
-afterEach(function() {
-  setup.Teardown(app, 'pages');
-});
+  after(function() {
+    helpers.clearData(app, 'buckets');
+  });
 
-describe('Pages', function() {
   describe('#update', function() {
     describe('with no body attributes', function() {
-      var api_response;
+      var response;
 
       // Make the request and store the response
       before(function(done) {
-        helpers.createPage(app, { name: 'test', slug: 'test' }, function(err, page) {
+        helpers.createBucket(app, { name: 'test' }, function(err, result) {
           request(app)
-          .put('/api/v1/pages/' + page.id)
+          .put('/api/v1/buckets/' + result.name)
           .set('content-type', 'application/json')
           .end(function(err, res){
-            api_response = res;
+            response = res;
             done();
           });
         });
       });
 
       it('should send a 400 status code', function() {
-        api_response.status.should.equal(400);
+        response.status.should.equal(400);
       });
 
       it('should send a 400 status code', function() {
-        api_response.text.should.equal('invalid json');
+        response.text.should.equal('invalid json');
       });
 
     });
 
     describe('with valid attributes', function() {
-      var api_response;
+      var response;
 
       // Make the request and store the response
       before(function(done) {
-        helpers.createPage(app, { name: 'test', slug: 'test' }, function(err, page) {
+        helpers.createBucket(app, { name: 'test' }, function(err, result) {
           request(app)
-          .put('/api/v1/pages/' + page.id)
+          .put('/api/v1/buckets/' + result.name)
           .send({ name: 'test updated' })
           .set('content-type', 'application/json')
           .end(function(err, res){
-            api_response = res;
+            response = res;
             done();
           });
         });
       });
 
       it('should send a 200 status code', function() {
-        api_response.status.should.equal(200);
+        response.status.should.equal(200);
       });
 
       it('should set the content-type header', function() {
-        api_response.should.be.json;
+        response.should.be.json;
       });
 
       it('should return the updated json object', function() {
-        var obj = JSON.parse(api_response.text);
-        obj.name.should.equal('test updated');
+        var obj = JSON.parse(response.text);
+        obj.name.should.equal('test-updated');
       });
     });
 
     describe('with invalid attributes', function() {
-      var api_response;
+      var response;
 
       // Make the request and store the response
       before(function(done) {
-        helpers.createPage(app, { name: 'test', slug: 'test' }, function(err) {
-          helpers.createPage(app, { name: 'test', slug: 'test2' }, function(err, page) {
+        helpers.createBucket(app, { name: 'test' }, function(err, result) {
+          helpers.createBucket(app, { name: 'test2' }, function(err, bucket) {
             request(app)
-            .put('/api/v1/pages/' + page.id)
-            .send({ slug: 'test' })
+            .put('/api/v1/buckets/' + bucket.name)
+            .send({ name: 'test' })
             .set('content-type', 'application/json')
             .end(function(err, res){
-              api_response = res;
+              response = res;
               done();
             });
           });
@@ -100,16 +94,16 @@ describe('Pages', function() {
       });
 
       it('should send a 500 status code', function() {
-        api_response.status.should.equal(500);
+        response.status.should.equal(500);
       });
 
       it('should set the content-type header', function() {
-        api_response.should.be.json;
+        response.should.be.json;
       });
 
       it('should respond with an error', function() {
-        var obj = JSON.parse(api_response.text);
-        obj.error.should.equal('Slug must be unique');
+        var obj = JSON.parse(response.text);
+        obj.error.should.equal('Name must be unique');
       });
     });
 

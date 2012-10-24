@@ -1,55 +1,40 @@
-var setup = require('./support/setup'),
+var helpers = require('../../support/helpers'),
     request = require('supertest'),
     should = require('should');
 
-var app;
+describe('Buckets', function() {
+  var app;
 
-before(function(done) {
-  setup.Setup(function(result) {
-    app = result;
-
-    app.on('ready', function() {
+  before(function(done) {
+    helpers.buildServer(function(connection, server) {
+      app = server;
       done();
     });
-
-    app.create();
   });
-});
 
-afterEach(function() {
-  setup.Teardown(app, 'pages');
-});
+  after(function() {
+    helpers.clearData(app, 'buckets');
+  });
 
-describe('Pages', function() {
   describe('#create', function() {
+
     describe('with no body attributes', function() {
-      var api_response;
-
-      // Make the request and store the response
-      before(function(done) {
+      it('should send a 400 status code', function(done) {
         request(app)
-        .post('/api/v1/pages')
+        .post('/api/v1/buckets')
         .set('content-type', 'application/json')
-        .end(function(err, res){
-          api_response = res;
-          done();
-        });
+        .expect(400, done);
       });
-
-      it('should send a 400 status code', function() {
-        api_response.status.should.equal(400);
-      });
-
     });
 
     describe('with valid attributes', function() {
       var api_response;
 
       // Make the request and store the response
-      before(function(done) {
+      beforeEach(function(done) {
         request(app)
-        .post('/api/v1/pages')
-        .send({ name: 'test', slug: 'test slug' })
+        .post('/api/v1/buckets')
+        .send({ name: 'test-slugify' })
         .set('content-type', 'application/json')
         .end(function(err, res){
           api_response = res;
@@ -68,13 +53,12 @@ describe('Pages', function() {
       it('should return a json object', function() {
         var obj = JSON.parse(api_response.text);
         obj.should.have.property('name');
-        obj.should.have.property('slug');
         obj.should.have.property('id');
       });
 
       it('should slugify the slug attribute', function() {
         var obj = JSON.parse(api_response.text);
-        obj.slug.should.equal('test-slug');
+        obj.name.should.equal('test-slugify');
       });
     });
 
@@ -82,10 +66,10 @@ describe('Pages', function() {
       var api_response;
 
       // Make the request and store the response
-      before(function(done) {
+      beforeEach(function(done) {
         request(app)
-        .post('/api/v1/pages')
-        .send({ name: 'test' })
+        .post('/api/v1/buckets')
+        .send({ name: '' })
         .set('content-type', 'application/json')
         .end(function(err, res){
           api_response = res;
@@ -103,7 +87,7 @@ describe('Pages', function() {
 
       it('should respond with an error', function() {
         var obj = JSON.parse(api_response.text);
-        obj.error.should.equal('Invalid Page data');
+        obj.error.should.equal('Invalid Bucket data');
       });
     });
 

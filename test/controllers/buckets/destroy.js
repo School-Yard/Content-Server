@@ -1,78 +1,72 @@
-var setup = require('./support/setup'),
-    helpers = require('./support/helpers'),
+var helpers = require('../../support/helpers'),
     request = require('supertest'),
     should = require('should');
 
-var app;
+describe('Buckets', function() {
+  var app;
 
-before(function(done) {
-  setup.Setup(function(result) {
-    app = result;
-
-    app.on('ready', function() {
+  before(function(done) {
+    helpers.buildServer(function(connection, server) {
+      app = server;
       done();
     });
-
-    app.create();
   });
-});
 
-afterEach(function() {
-  setup.Teardown(app, 'pages');
-});
+  after(function() {
+    helpers.clearData(app, 'buckets');
+  });
 
-describe('Pages', function() {
   describe('#destroy', function() {
     describe('with invalid id', function() {
-      var api_response;
+      var response;
 
       before(function(done) {
         request(app)
-        .del('/api/v1/pages/100')
+        .del('/api/v1/buckets/100')
         .end(function(err, res){
-          api_response = res;
+          response = res;
           done();
         });
       });
 
       it('should send a 404 status code', function() {
-        api_response.status.should.equal(404);
+        response.status.should.equal(404);
       });
 
       it('should set the content-type header', function() {
-        api_response.should.be.json;
+        response.should.be.json;
       });
 
       it('should send an error message', function() {
-        var obj = JSON.parse(api_response.text);
-        obj.error.should.equal('No record found with that ID');
+        var obj = JSON.parse(response.text);
+        obj.error.should.equal("Can't find that bucket");
       });
     });
 
     describe('with valid id', function() {
-      var api_response;
+      var response;
 
       before(function(done) {
-        helpers.createPage(app, { name: 'test', slug: 'test' }, function(err, page) {
+        helpers.createBucket(app, { name: 'test' }, function(err, result) {
           request(app)
-          .del('/api/v1/pages/' + page.id)
+          .del('/api/v1/buckets/' + result.name)
           .end(function(err, res){
-            api_response = res;
+            response = res;
             done();
           });
         });
       });
 
       it('should send a 200 status code', function() {
-        api_response.status.should.equal(200);
+        response.status.should.equal(200);
       });
 
       it('should set the content-type header', function() {
-        api_response.should.be.json;
+        response.should.be.json;
       });
 
       it('should send an status message', function() {
-        var obj = JSON.parse(api_response.text);
+        var obj = JSON.parse(response.text);
         obj.status.should.equal(1);
       });
     });

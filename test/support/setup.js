@@ -3,32 +3,29 @@ var utils = require('./utils'),
     cards = require('../../lib'),
     connect = require('connect');
 
-exports.Setup = function(callback) {
+exports.Setup = function(connection, callback) {
   var db,
       app;
 
   app = recess();
 
-  utils.db(function(conn) {
+  app.set('connection', connection);
+  app.set('namespace', 'test');
+  app.set('adapters', { mongo: connection });
 
-    app.set('connection', conn);
-    app.set('namespace', 'test');
-    app.set('adapters', { mongo: conn });
+  // Middleware to test controllers
+  app.before(connect.bodyParser());
+  app.before(connect.methodOverride());
 
-    // Middleware to test controllers
-    app.before(connect.bodyParser());
-    app.before(connect.methodOverride());
+  // Include the API Card
+  app.card(cards.v1);
 
-    // Include the API Card
-    app.card(cards.v1);
+  app.adapters = { mongo: connection };
+  app.conn = connection;
 
-    app.conn = conn;
-
-    // Create a category at /api/v1
-    create_category(conn, function() {
-      return callback(app);
-    });
-
+  // Create a category at /api/v1
+  create_category(connection, function() {
+    callback(connection, app);
   });
 };
 

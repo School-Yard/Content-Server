@@ -73,5 +73,30 @@ describe('Buckets', function() {
       });
     });
 
+    describe('with items in the bucket', function() {
+      var response;
+
+      before(function(done) {
+        helpers.createBucket(app, { name: 'test' }, function(err, bucket) {
+          helpers.createItem(app, { bucket_name: bucket.name, bucket_id: bucket.id, name: 'test' }, function(err, result) {
+            request(app)
+            .get('/api/v1/buckets/' + result.name)
+            .end(function(err, res) {
+              if(err) return callback(err);
+              response = res;
+              done();
+            });
+          });
+        });
+      });
+
+      it('should return an array of items', function() {
+        var obj = JSON.parse(response.text);
+        obj.should.have.property('items');
+        obj.items.should.be.an.instanceOf(Array);
+        obj.items.length.should.equal(1);
+      });
+
+    });
   });
 });

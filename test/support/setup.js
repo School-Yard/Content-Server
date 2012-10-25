@@ -1,11 +1,9 @@
-var utils = require('./utils'),
-    recess = require('schoolyard-recess'),
+var recess = require('schoolyard-recess'),
     cards = require('../../lib'),
     connect = require('connect');
 
 exports.Setup = function(connection, callback) {
-  var db,
-      app;
+  var app;
 
   app = recess();
 
@@ -46,10 +44,10 @@ function create_category(db, cb) {
 exports.Teardown = function(app, namespace) {
   var keys = Object.keys(app.conn.store);
 
-  var keyspace = namespace.constructor === Array ? namespace : [namespace];
+  var keyspace = (namespace instanceof Array) ? namespace : [namespace];
 
   for(var i = 0; i < keys.length; i++) {
-    if(keyspace.indexOf(keys[i].split(':')[0]) >= 0) {
+    if(keyspace.indexOf(keys[i].split(':')[0]) >= -1) {
       delete app.conn.store[keys[i]];
     }
   }

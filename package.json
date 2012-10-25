@@ -1,5 +1,5 @@
 {
-  "name": "schoolyard-content",
+  "name": "schoolyard-content-server",
   "description": "A Content API for use with Card-Catalog",
   "version": "0.0.1",
   "private": true,
@@ -8,7 +8,7 @@
     "particlebanana <particlebanana@gmail.com>",
     "vanetix <matmcfarland@gmail.com>"
   ],
-  "url": "",
+  "url": "https://github.com/particlebanana/Content-Server",
   "keywords": ["content api", "cardcatalog"],
   "license" : "MIT",
   "dependencies": {
@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git@github.com:particlebanana/Content-Server.git"
   },
   "main": "./lib",
   "engines": {

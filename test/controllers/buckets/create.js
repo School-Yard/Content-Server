@@ -8,6 +8,12 @@ describe('Buckets', function() {
   before(function(done) {
     helpers.buildServer(function(connection, server) {
       app = server;
+
+      app.before(function(req, res, next) {
+        req.user = {role: 10}; // don't test access control here
+        next();
+      });
+
       done();
     });
   });
@@ -31,14 +37,20 @@ describe('Buckets', function() {
       var api_response;
 
       // Make the request and store the response
-      beforeEach(function(done) {
+      before(function(done) {
         request(app)
         .post('/api/v1/buckets')
         .send({ name: 'test-slugify' })
         .set('content-type', 'application/json')
         .end(function(err, res){
           api_response = res;
-          done();
+
+          // Hack to get around crazy before/after stuff
+          request(app)
+          .del('/api/v1/buckets/' + JSON.parse(res.text).name)
+          .end(function(err, res){
+            done();
+          });
         });
       });
 
@@ -66,7 +78,7 @@ describe('Buckets', function() {
       var api_response;
 
       // Make the request and store the response
-      beforeEach(function(done) {
+      before(function(done) {
         request(app)
         .post('/api/v1/buckets')
         .send({ name: '' })

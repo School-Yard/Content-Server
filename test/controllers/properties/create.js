@@ -41,33 +41,69 @@ describe('Properties', function() {
     });
 
     describe('with valid attributes', function() {
-      var response;
+      describe('and a single property object', function() {
+	var response;
 
-      // Make the request and store the response
-      beforeEach(function(done) {
-	request(app)
-	.post('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties')
-	.send({ key: 'key', value: 'val' })
-	.set('content-type', 'application/json')
-	.end(function(err, res) {
-	  response = res;
-	  done();
+	// Make the request and store the response
+	beforeEach(function(done) {
+	  request(app)
+	  .post('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties')
+	  .send({ key: 'key', value: 'val' })
+	  .set('content-type', 'application/json')
+	  .end(function(err, res) {
+	    response = res;
+	    done();
+	  });
+	});
+
+	it('should send a 201 status code', function() {
+	  response.status.should.equal(201);
+	});
+
+	it('should set the content-type header', function() {
+	  response.should.be.json;
+	});
+
+	it('should return an array with a single json object', function() {
+	  var obj = JSON.parse(response.text);
+	  obj.should.be.an.instanceOf(Array);
+	  obj[0].should.have.property('key');
+	  obj[0].should.have.property('value');
+	  obj[0].should.have.property('item_id');
 	});
       });
 
-      it('should send a 201 status code', function() {
-	response.status.should.equal(201);
-      });
+      describe('and an array of property objects', function() {
+	var response;
 
-      it('should set the content-type header', function() {
-	response.should.be.json;
-      });
+	// Make the request and store the response
+	beforeEach(function(done) {
+	  request(app)
+	  .post('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties')
+	  .send([{ key: 'key', value: 'val' }, { key: 'key2', val: 'val2'}])
+	  .set('content-type', 'application/json')
+	  .end(function(err, res) {
+	    response = res;
+	    done();
+	  });
+	});
 
-      it('should return a json object', function() {
-	var obj = JSON.parse(response.text);
-	obj.should.have.property('key');
-	obj.should.have.property('value');
-	obj.should.have.property('item_id');
+	it('should send a 201 status code', function() {
+	  response.status.should.equal(201);
+	});
+
+	it('should set the content-type header', function() {
+	  response.should.be.json;
+	});
+
+	it('should return an array with two json objects', function() {
+	  var obj = JSON.parse(response.text);
+	  obj.should.be.an.instanceOf(Array);
+	  obj.length.should.equal(2);
+	  obj[0].should.have.property('key');
+	  obj[0].should.have.property('value');
+	  obj[0].should.have.property('item_id');
+	});
       });
     });
 

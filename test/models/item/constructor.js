@@ -23,8 +23,6 @@ describe('Item', function() {
           attrs = {
             bucket_id: '',
             name: '',
-            published: false,
-            pending_changes: false,
             ctime: '',
             mtime: ''
           };
@@ -55,9 +53,9 @@ describe('Item', function() {
     });
 
     it('should get an array of values', function() {
-      var val = item.get(['name', 'published']);
+      var val = item.get(['name', 'ctime']);
       val.name.should.equal('test-slug');
-      val.published.should.equal(false);
+      should.exist(val.ctime);
     });
   });
 });

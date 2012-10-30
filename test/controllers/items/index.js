@@ -61,7 +61,6 @@ describe('Items', function(done) {
         obj.should.have.property('name');
         obj.should.have.property('id');
         obj.should.have.property('bucket_id');
-        obj.should.have.property('published');
       });
     });
   });

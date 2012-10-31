@@ -8,6 +8,12 @@ describe('Buckets', function() {
   before(function(done) {
     helpers.buildServer(function(connection, server) {
       app = server;
+
+      app.before(function(req, res, next) {
+        req.user = {role: 10}; // don't test access control here
+        next();
+      });
+
       done();
     });
   });

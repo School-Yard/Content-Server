@@ -14,7 +14,8 @@
   "dependencies": {
     "cardcatalog": "0.0.x",
     "validator": "0.4.x",
-    "slug": "0.2.x"
+    "slug": "0.2.x",
+    "pause": "0.0.x"
   },
   "devDependencies": {
     "mocha": "*",

@@ -9,6 +9,11 @@ describe('Items', function() {
     helpers.buildServer(function(connection, server) {
       app = server;
 
+      app.before(function(req, res, next) {
+        req.user = {role: 10}; // don't test access control here
+        next();
+      });
+
       // Create a bucket to use for item tests
       helpers.createBucket(app, { name: 'test' }, function(err, result) {
         bucket = result;

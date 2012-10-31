@@ -12,7 +12,10 @@
   "keywords": ["content api", "cardcatalog"],
   "license" : "MIT",
   "dependencies": {
+    "trapperkeeper": "0.0.x",
     "cardcatalog": "0.0.x",
+    "schoolyard-recess": "0.0.x",
+    "connect": "2.6.x",
     "validator": "0.4.x",
     "slug": "0.2.x",
     "pause": "0.0.x",
@@ -21,10 +24,7 @@
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "trapperkeeper": "*",
-    "supertest": "*",
-    "schoolyard-recess": "*",
-    "connect": "*"
+    "supertest": "*"
   },
   "scripts": {
     "test": "mocha test/**/**"
@@ -33,7 +33,7 @@
     "type": "git",
     "url": "git@github.com:particlebanana/Content-Server.git"
   },
-  "main": "./lib",
+  "main": "./app.js",
   "engines": {
     "node": ">=0.6.x"
   }

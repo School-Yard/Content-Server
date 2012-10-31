@@ -26,7 +26,7 @@ To install dependencies run:
 
 ```bash
 $ npm install
-``
+```
 
 from within the root directory.
 

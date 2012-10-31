@@ -39,7 +39,7 @@ exports.ItemProperty = function(callback) {
   db(function(conn) {
     var options = {
       adapters: {
-	mongo: conn
+  mongo: conn
       }
     };
 

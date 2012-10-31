@@ -17,17 +17,17 @@ describe('ItemProperty', function() {
       var record;
 
       before(function(done) {
-	var attrs = { item_id: '123', key: 'name' };
-	record = new ItemProperty(attrs);
-	record.save(done);
+        var attrs = { item_id: '123', key: 'name' };
+        record = new ItemProperty(attrs);
+        record.save(done);
       });
 
       it('should set an id property', function() {
-	should.exist(record.get('id'));
+        should.exist(record.get('id'));
       });
 
       it('should set a ctime', function() {
-	record.get('ctime').should.not.equal('');
+        record.get('ctime').should.not.equal('');
       });
     });
 
@@ -35,39 +35,38 @@ describe('ItemProperty', function() {
       var record;
 
       beforeEach(function(done) {
-	ItemProperty.create({ item_id: '123', key: 'name' }, function(err, result) {
-	  var attrs = { id: 2, item_id: '123', key: 'name' };
-	  record = new ItemProperty(attrs);
-	  done();
-	});
+        ItemProperty.create({ item_id: '123', key: 'name' }, function(err, result) {
+          var attrs = { id: 2, item_id: '123', key: 'name' };
+          record = new ItemProperty(attrs);
+          done();
+        });
       });
 
       describe('and no conflicts', function() {
 
-	beforeEach(function(done) {
-	  record.save(done);
-	});
+        beforeEach(function(done) {
+          record.save(done);
+        });
 
-	it('should set an mtime', function() {
-	  record.get('mtime').should.not.equal('');
-	});
+        it('should set an mtime', function() {
+          record.get('mtime').should.not.equal('');
+        });
       });
 
       describe('and a conflict', function() {
 
-	beforeEach(function() {
-	  record.set({ key: '' });
-	});
+        beforeEach(function() {
+          record.set({ key: '' });
+        });
 
-	it('should respond with an error', function(done) {
-	  record.save(function(err, result) {
-	    should.exist(err);
-	    err.message.should.equal('Invalid item property data');
-	    done();
-	  });
-	});
+        it('should respond with an error', function(done) {
+          record.save(function(err, result) {
+            should.exist(err);
+            err.message.should.equal('Invalid item property data');
+            done();
+          });
+        });
       });
     });
-
   });
 });

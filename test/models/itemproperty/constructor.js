@@ -20,13 +20,13 @@ describe('ItemProperty', function() {
 
     it('should set default attributes', function() {
       var record = new ItemProperty(),
-	  attrs = {
-	    item_id: '',
-	    key: '',
-	    value: '',
-	    ctime: '',
-	    mtime: ''
-	  };
+      attrs = {
+        item_id: '',
+        key: '',
+        value: '',
+        ctime: '',
+        mtime: ''
+      };
 
       record._attributes.should.eql(attrs);
     });

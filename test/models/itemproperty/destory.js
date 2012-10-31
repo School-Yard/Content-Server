@@ -23,16 +23,14 @@ describe('ItemProperty', function() {
       var id = record.get('id');
 
       record.destroy(function(err, status) {
-	status.should.equal(1);
+        status.should.equal(1);
 
-	ItemProperty.get(id, function(err, result) {
-	  should.not.exist(err);
-	  should.not.exist(result);
-	  done();
-	});
-
+        ItemProperty.get(id, function(err, result) {
+          should.not.exist(err);
+          should.not.exist(result);
+          done();
+        });
       });
     });
-
   });
 });

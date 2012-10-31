@@ -25,7 +25,7 @@ describe('Access Control', function() {
         request(app)
         .del('/api/v1/buckets/100')
         .end(function(err, res){
-          res.status.should.not.equal(401)
+          res.status.should.not.equal(401);
           done();
         });
       });
@@ -51,7 +51,7 @@ describe('Access Control', function() {
         request(app)
         .del('/api/v1/buckets/100')
         .end(function(err, res){
-          res.status.should.equal(401)
+          res.status.should.equal(401);
           done();
         });
       });

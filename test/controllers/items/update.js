@@ -10,21 +10,21 @@ describe('Items', function() {
       app = server;
 
       app.before(function(req, res, next) {
-	req.user = {role: 10}; // don't test access control here
-	next();
+        req.user = {role: 10}; // don't test access control here
+        next();
       });
 
       // Create a bucket to use for item tests
       helpers.createBucket(app, { name: 'test' }, function(err, result) {
-	if(err) return done(err);
+        if(err) return done(err);
 
-	Bucket = result;
+        Bucket = result;
 
-	// Create an item to use in the show tests
-	helpers.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item_res) {
-	  Item = item_res;
-	  done();
-	});
+        // Create an item to use in the show tests
+        helpers.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item_res) {
+          Item = item_res;
+          done();
+        });
       });
     });
   });
@@ -39,21 +39,21 @@ describe('Items', function() {
 
       // Make the request and store the response
       before(function(done) {
-	request(app)
-	.put('/api/v1/buckets/' +  Bucket.name + '/items/' + Item.name)
-	.set('content-type', 'application/json')
-	.end(function(err, res){
-	  response = res;
-	  done();
-	});
+        request(app)
+        .put('/api/v1/buckets/' +  Bucket.name + '/items/' + Item.name)
+        .set('content-type', 'application/json')
+        .end(function(err, res){
+          response = res;
+          done();
+        });
       });
 
       it('should send a 400 status code', function() {
-	response.status.should.equal(400);
+        response.status.should.equal(400);
       });
 
       it('should send a 400 status code', function() {
-	response.text.should.equal('invalid json');
+        response.text.should.equal('invalid json');
       });
 
     });
@@ -63,27 +63,27 @@ describe('Items', function() {
 
       // Make the request and store the response
       before(function(done) {
-	request(app)
-	.put('/api/v1/buckets/' +  Bucket.name + '/items/' + Item.name)
-	.send({ name: 'test updated' })
-	.set('content-type', 'application/json')
-	.end(function(err, res){
-	  response = res;
-	  done();
-	});
+        request(app)
+        .put('/api/v1/buckets/' +  Bucket.name + '/items/' + Item.name)
+        .send({ name: 'test updated' })
+        .set('content-type', 'application/json')
+        .end(function(err, res){
+          response = res;
+          done();
+        });
       });
 
       it('should send a 200 status code', function() {
-	response.status.should.equal(200);
+        response.status.should.equal(200);
       });
 
       it('should set the content-type header', function() {
-	response.should.be.json;
+        response.should.be.json;
       });
 
       it('should return the updated json object', function() {
-	var obj = JSON.parse(response.text);
-	obj.name.should.equal('test-updated');
+        var obj = JSON.parse(response.text);
+        obj.name.should.equal('test-updated');
       });
     });
 
@@ -92,32 +92,32 @@ describe('Items', function() {
 
       // Make the request and store the response
       before(function(done) {
-	// Hack for before/after nonsense
-	helpers.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item) {
-	  helpers.createItem(app, { bucket_id: Bucket.id, bucket_name: Bucket.name, name: 'test2' }, function(err, result) {
-	    request(app)
-	    .put('/api/v1/buckets/' +  Bucket.name + '/items/' + item.name)
-	    .send({ name: 'test2' })
-	    .set('content-type', 'application/json')
-	    .end(function(err, res){
-	      response = res;
-	      done();
-	    });
-	  });
-	});
+        // Hack for before/after nonsense
+        helpers.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item) {
+          helpers.createItem(app, { bucket_id: Bucket.id, bucket_name: Bucket.name, name: 'test2' }, function(err, result) {
+            request(app)
+            .put('/api/v1/buckets/' +  Bucket.name + '/items/' + item.name)
+            .send({ name: 'test2' })
+            .set('content-type', 'application/json')
+            .end(function(err, res){
+              response = res;
+              done();
+            });
+          });
+        });
       });
 
       it('should send a 500 status code', function() {
-	response.status.should.equal(500);
+        response.status.should.equal(500);
       });
 
       it('should set the content-type header', function() {
-	response.should.be.json;
+        response.should.be.json;
       });
 
       it('should respond with an error', function() {
-	var obj = JSON.parse(response.text);
-	obj.error.should.equal('Name must be unique');
+        var obj = JSON.parse(response.text);
+        obj.error.should.equal('Name must be unique');
       });
     });
 

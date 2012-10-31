@@ -40,10 +40,10 @@ describe('Item', function() {
         });
 
         it('should return an error', function(done) {
-	  item.set({ bucket_id: '123', name: 'test'});
+          item.set({ bucket_id: '123', name: 'test'});
           item.validate(function(err) {
             should.exist(err);
-	    err.message.should.equal('Name must be unique');
+            err.message.should.equal('Name must be unique');
             done();
           });
         });
@@ -66,23 +66,21 @@ describe('Item', function() {
       });
 
       describe('with duplicate name but different bucket', function() {
-	var item;
+        var item;
 
-	before(function(done) {
-	  item = new Item();
-	  Item.create({bucket_id: '123', name: 'tests'}, done);
-	});
+        before(function(done) {
+          item = new Item();
+          Item.create({bucket_id: '123', name: 'tests'}, done);
+        });
 
-	it('should not return an error', function(done) {
-	  item.set({ bucket_id: '124', name: 'tests'});
-	  item.validate(function(err) {
-	    should.not.exist(err);
-	    done();
-	  });
-	});
-
+        it('should not return an error', function(done) {
+          item.set({ bucket_id: '124', name: 'tests'});
+          item.validate(function(err) {
+            should.not.exist(err);
+            done();
+          });
+        });
       });
     });
-
   });
 });

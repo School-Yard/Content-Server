@@ -15,20 +15,20 @@ describe('ItemProperty', function() {
 
     describe('invalid data', function() {
       describe('with empty properties', function() {
-	var record;
+        var record;
 
-	before(function() {
-	  record = new ItemProperty();
-	});
+        before(function() {
+          record = new ItemProperty();
+        });
 
-	it('should return an error', function(done) {
-	  record.set({ key: 'name' });
-	  record.validate(function(err) {
-	    should.exist(err);
-	    err.message.should.equal('Invalid item property data');
-	    done();
-	  });
-	});
+        it('should return an error', function(done) {
+          record.set({ key: 'name' });
+          record.validate(function(err) {
+            should.exist(err);
+            err.message.should.equal('Invalid item property data');
+            done();
+          });
+        });
       });
 
     });
@@ -37,15 +37,15 @@ describe('ItemProperty', function() {
       var record;
 
       before(function() {
-	record = new ItemProperty();
+        record = new ItemProperty();
       });
 
       it('should not return an error', function(done) {
-	record.set({ item_id: '123', key: 'name'});
-	record.validate(function(err) {
-	  should.not.exist(err);
-	  done();
-	});
+        record.set({ item_id: '123', key: 'name'});
+        record.validate(function(err) {
+          should.not.exist(err);
+          done();
+        });
       });
     });
 

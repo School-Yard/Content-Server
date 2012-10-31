@@ -3,7 +3,7 @@ var helpers = require('../../support/helpers'),
     should = require('should');
 
 describe('Access Control', function() {
-  describe('Buckets#destroy', function() {
+  describe('Items#destroy', function() {
 
     describe('authorized', function() {
       var app;
@@ -23,8 +23,8 @@ describe('Access Control', function() {
 
       it('should require role 2', function(done) {
         request(app)
-        .del('/api/v1/buckets/100')
-        .end(function(err, res){
+        .del('/api/v1/buckets/test/items/test')
+        .end(function(err, res) {
           res.status.should.not.equal(401);
           done();
         });
@@ -49,8 +49,8 @@ describe('Access Control', function() {
 
       it('should require role 2', function(done) {
         request(app)
-        .del('/api/v1/buckets/100')
-        .end(function(err, res){
+        .del('/api/v1/buckets/test/items/test')
+        .end(function(err, res) {
           res.status.should.equal(401);
           done();
         });

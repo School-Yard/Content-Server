@@ -53,3 +53,26 @@ helpers.createItem = function(app, attrs, callback) {
     callback(null, JSON.parse(res.text));
   });
 };
+
+helpers.createItemProperties = function(app, attrs, callback) {
+  if(!attrs.bucket_name) {
+    return callback(new Error('A bucket_name attribute is required for the createItemProperties helper'));
+  }
+
+  if(!attrs.item_name) {
+    return callback(new Error('A item_name attribute is required for the createItemProperties helper'));
+  }
+
+  if(!attrs.body) {
+    return callback(new Error('A body attribute is required for the createItemProperties helper'));
+  }
+
+  request(app)
+  .post('/api/v1/buckets/' + attrs.bucket_name + '/items/' + attrs.item_name + '/properties')
+  .send(attrs.body)
+  .set('content-type', 'application/json')
+  .end(function(err, res) {
+    if(err) return callback(err);
+    callback(null, JSON.parse(res.text));
+  });
+};

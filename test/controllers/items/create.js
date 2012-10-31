@@ -65,7 +65,6 @@ describe('Items', function() {
         obj.should.have.property('name');
         obj.should.have.property('id');
         obj.should.have.property('bucket_id');
-        obj.should.have.property('published');
       });
 
       it('should slugify the slug attribute', function() {

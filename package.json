@@ -15,7 +15,8 @@
     "cardcatalog": "0.0.x",
     "validator": "0.4.x",
     "slug": "0.2.x",
-    "pause": "0.0.x"
+    "pause": "0.0.x",
+    "async": "0.1.x"
   },
   "devDependencies": {
     "mocha": "*",

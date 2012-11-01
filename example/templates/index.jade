@@ -1,0 +1,16 @@
+html
+  head
+    title Content API
+
+  body
+    div#form
+      h3 Create new bucket
+      form(action='/', method="post")
+        input(type="text", name="name")
+        button(type="submit") Save
+
+    div
+      ul
+        each bucket in buckets
+          li
+            a(href="/#{bucket.name}") #{bucket.id} - #{bucket.name}

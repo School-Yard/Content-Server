@@ -1,0 +1,21 @@
+html
+  head
+    title Content API
+
+  body
+    div
+      h2
+        a(href="/#{bucket}") #{bucket}
+    div#form
+      h3 Create new item
+      form(action='/#{bucket}/#{item.name}', method="post")
+        input(type="text", name="key")
+        input(type="text", name="value")
+        button(type="submit") Save
+
+    div
+      h3 #{item.id} - #{item.name}
+      h4 properties:
+      ul
+        each key in Object.keys(item.properties)
+          li #{key} - #{item.properties[key].value}

@@ -21,6 +21,7 @@ Utils.connectDb = function(callback) {
 /**
  * Build the application stack for testing
  */
+
 Utils.createApplication = function(callback) {
   var app = express(),
       adapters = {};

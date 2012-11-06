@@ -80,10 +80,10 @@ describe('Buckets', function() {
       var response;
 
       before(function(done) {
-        Utils.createBucket(app, { name: 'test' }, function(err, bucket) {
+        Utils.createBucket(app, { name: 'test2' }, function(err, bucket) {
           Utils.createItem(app, { bucket_name: bucket.name, bucket_id: bucket.id, name: 'test' }, function(err, result) {
             request(app)
-            .get('/api/v1/buckets/' + result.name)
+            .get('/api/v1/buckets/' + bucket.name)
             .end(function(err, res) {
               if(err) return callback(err);
               response = res;

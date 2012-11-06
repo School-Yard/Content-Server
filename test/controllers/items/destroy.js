@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,20 +6,22 @@ describe('Items', function() {
   var app, Bucket, Item, Props;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
+
       var props = [{ key: 'key1', value: 'value1' }, { key: 'key2', value: 'value2'}];
 
       // Create a bucket to use for item tests
-      helpers.createBucket(app, { name: 'test' }, function(err, bucket) {
-        helpers.createItem(app, { name: 'test', bucket_id: bucket.id, bucket_name: bucket.name }, function(err, item) {
-          helpers.createItemProperties(app, { bucket_name: bucket.name, item_name: item.name, body: props }, function(err, props) {
+      Utils.createBucket(app, { name: 'test' }, function(err, bucket) {
+        Utils.createItem(app, { name: 'test', bucket_id: bucket.id, bucket_name: bucket.name }, function(err, item) {
+          Utils.createItemProperties(app, { bucket_name: bucket.name, item_name: item.name, body: props }, function(err, props) {
             Bucket = bucket;
             Item = item;
             Props = props;
@@ -30,17 +32,13 @@ describe('Items', function() {
     });
   });
 
-  after(function() {
-    helpers.clearData(app, ['buckets', 'items', 'item_properties']);
-  });
-
   describe('#destroy', function() {
-    describe('with invalid id', function() {
+    describe('with invalid name', function() {
       var response;
 
       before(function(done) {
         request(app)
-        .del('/api/v1/buckets/' + Bucket.name + '/items/100')
+        .del('/api/v1/buckets/' + Bucket.name + '/items/invalid_item')
         .end(function(err, res){
           response = res;
           done();
@@ -61,7 +59,7 @@ describe('Items', function() {
       });
     });
 
-    describe('with valid id', function() {
+    describe('with valid name', function() {
       var response;
 
       before(function(done) {

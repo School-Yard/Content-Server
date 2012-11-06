@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,31 +6,29 @@ describe('Items', function() {
   var app, Bucket, Item;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
+
       // Create a bucket to use for item tests
-      helpers.createBucket(app, { name: 'test' }, function(err, result) {
+      Utils.createBucket(app, { name: 'test' }, function(err, result) {
         if(err) return done(err);
 
         Bucket = result;
 
         // Create an item to use in the show tests
-        helpers.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item_res) {
+        Utils.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item_res) {
           Item = item_res;
           done();
         });
       });
     });
-  });
-
-  after(function() {
-    helpers.clearData(app, ['buckets', 'items']);
   });
 
   describe('#update', function() {
@@ -93,8 +91,8 @@ describe('Items', function() {
       // Make the request and store the response
       before(function(done) {
         // Hack for before/after nonsense
-        helpers.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item) {
-          helpers.createItem(app, { bucket_id: Bucket.id, bucket_name: Bucket.name, name: 'test2' }, function(err, result) {
+        Utils.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item) {
+          Utils.createItem(app, { bucket_id: Bucket.id, bucket_name: Bucket.name, name: 'test2' }, function(err, result) {
             request(app)
             .put('/api/v1/buckets/' +  Bucket.name + '/items/' + item.name)
             .send({ name: 'test2' })

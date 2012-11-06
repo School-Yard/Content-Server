@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,28 +6,26 @@ describe('Items', function(done) {
   var app, Bucket, Item;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
+
       // Create a bucket to use for item tests
-      helpers.createBucket(app, { name: 'test' }, function(err, result) {
+      Utils.createBucket(app, { name: 'test' }, function(err, result) {
         Bucket = result;
 
         // Create an item to use in the show tests
-        helpers.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item_res) {
+        Utils.createItem(app, { bucket_name: Bucket.name, bucket_id: Bucket.id, name: 'test' }, function(err, item_res) {
           Item = item_res;
           done();
         });
       });
-    });
-
-    after(function() {
-      helpers.clearData(app, ['buckets', 'items', 'item_properties']);
     });
   });
 
@@ -97,9 +95,9 @@ describe('Items', function(done) {
         ];
 
         // Hack to get around before/after issues
-        helpers.createBucket(app, { name: 'test-prop' }, function(err, bucket) {
-          helpers.createItem(app, { bucket_name: bucket.name, bucket_id: bucket.id, name: 'test-prop' }, function(err, item) {
-            helpers.createItemProperties(app, { bucket_name: bucket.name, item_name: item.name, body: props }, function(err, result) {
+        Utils.createBucket(app, { name: 'test-prop' }, function(err, bucket) {
+          Utils.createItem(app, { bucket_name: bucket.name, bucket_id: bucket.id, name: 'test-prop' }, function(err, item) {
+            Utils.createItemProperties(app, { bucket_name: bucket.name, item_name: item.name, body: props }, function(err, result) {
               if(err) return done(err);
 
               request(app)

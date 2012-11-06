@@ -39,7 +39,7 @@ describe('Items', function() {
       var response;
 
       // Make the request and store the response
-      beforeEach(function(done) {
+      before(function(done) {
         request(app)
         .post('/api/v1/buckets/' + bucket.name + '/items')
         .send({ name: 'test item' })

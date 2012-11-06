@@ -47,7 +47,7 @@ describe('Buckets', function() {
 
       // Make the request and store the response
       before(function(done) {
-        Utils.createBucket(app, { name: 'test' }, function(err, result) {
+        Utils.createBucket(app, { name: 'test2' }, function(err, result) {
           request(app)
           .put('/api/v1/buckets/' + result.name)
           .send({ name: 'test updated' })
@@ -78,8 +78,8 @@ describe('Buckets', function() {
 
       // Make the request and store the response
       before(function(done) {
-        Utils.createBucket(app, { name: 'test' }, function(err, result) {
-          Utils.createBucket(app, { name: 'test2' }, function(err, bucket) {
+        Utils.createBucket(app, { name: 'test3' }, function(err, result) {
+          Utils.createBucket(app, { name: 'test4' }, function(err, bucket) {
             request(app)
             .put('/api/v1/buckets/' + bucket.name)
             .send({ name: 'test' })

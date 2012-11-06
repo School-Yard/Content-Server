@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,20 +6,17 @@ describe('Buckets', function() {
   var app;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
       done();
     });
-  });
-
-  after(function() {
-    helpers.clearData(app, 'buckets');
   });
 
   describe('#update', function() {
@@ -28,7 +25,7 @@ describe('Buckets', function() {
 
       // Make the request and store the response
       before(function(done) {
-        helpers.createBucket(app, { name: 'test' }, function(err, result) {
+        Utils.createBucket(app, { name: 'test' }, function(err, result) {
           request(app)
           .put('/api/v1/buckets/' + result.name)
           .set('content-type', 'application/json')
@@ -43,10 +40,6 @@ describe('Buckets', function() {
         response.status.should.equal(400);
       });
 
-      it('should send a 400 status code', function() {
-        response.text.should.equal('invalid json');
-      });
-
     });
 
     describe('with valid attributes', function() {
@@ -54,7 +47,7 @@ describe('Buckets', function() {
 
       // Make the request and store the response
       before(function(done) {
-        helpers.createBucket(app, { name: 'test' }, function(err, result) {
+        Utils.createBucket(app, { name: 'test' }, function(err, result) {
           request(app)
           .put('/api/v1/buckets/' + result.name)
           .send({ name: 'test updated' })
@@ -85,8 +78,8 @@ describe('Buckets', function() {
 
       // Make the request and store the response
       before(function(done) {
-        helpers.createBucket(app, { name: 'test' }, function(err, result) {
-          helpers.createBucket(app, { name: 'test2' }, function(err, bucket) {
+        Utils.createBucket(app, { name: 'test' }, function(err, result) {
+          Utils.createBucket(app, { name: 'test2' }, function(err, bucket) {
             request(app)
             .put('/api/v1/buckets/' + bucket.name)
             .send({ name: 'test' })

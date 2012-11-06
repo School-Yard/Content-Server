@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,29 +6,26 @@ describe('Buckets', function() {
   var app;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
       done();
     });
   });
 
-  after(function() {
-    helpers.clearData(app, 'buckets');
-  });
-
   describe('#destroy', function() {
-    describe('with invalid id', function() {
+    describe('with invalid name', function() {
       var response;
 
       before(function(done) {
         request(app)
-        .del('/api/v1/buckets/100')
+        .del('/api/v1/buckets/invalid_name')
         .end(function(err, res){
           response = res;
           done();
@@ -53,7 +50,7 @@ describe('Buckets', function() {
       var response;
 
       before(function(done) {
-        helpers.createBucket(app, { name: 'test' }, function(err, result) {
+        Utils.createBucket(app, { name: 'test' }, function(err, result) {
           request(app)
           .del('/api/v1/buckets/' + result.name)
           .end(function(err, res){
@@ -71,7 +68,7 @@ describe('Buckets', function() {
         response.should.be.json;
       });
 
-      it('should send an status message', function() {
+      it('should send a status message', function() {
         var obj = JSON.parse(response.text);
         obj.status.should.equal(1);
       });

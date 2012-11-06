@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,20 +6,17 @@ describe('Buckets', function() {
   var app;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
       done();
     });
-  });
-
-  after(function() {
-    helpers.clearData(app, 'buckets');
   });
 
   describe('#show', function() {
@@ -27,7 +24,7 @@ describe('Buckets', function() {
       var response;
 
       before(function(done) {
-        helpers.createBucket(app, { name: 'test' }, function(err, result) {
+        Utils.createBucket(app, { name: 'test' }, function(err, result) {
           request(app)
           .get('/api/v1/buckets/' + result.name)
           .end(function(err, res) {
@@ -83,8 +80,8 @@ describe('Buckets', function() {
       var response;
 
       before(function(done) {
-        helpers.createBucket(app, { name: 'test' }, function(err, bucket) {
-          helpers.createItem(app, { bucket_name: bucket.name, bucket_id: bucket.id, name: 'test' }, function(err, result) {
+        Utils.createBucket(app, { name: 'test' }, function(err, bucket) {
+          Utils.createItem(app, { bucket_name: bucket.name, bucket_id: bucket.id, name: 'test' }, function(err, result) {
             request(app)
             .get('/api/v1/buckets/' + result.name)
             .end(function(err, res) {

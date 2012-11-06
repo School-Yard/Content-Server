@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,27 +6,25 @@ describe('Properties', function() {
   var app, Bucket, Item;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
+
       // Create a bucket to use for item tests
-      helpers.createBucket(app, { name: 'test' }, function(err, bucket) {
-        helpers.createItem(app, { name: 'test', bucket_id: bucket.id, bucket_name: bucket.name }, function(err, item) {
+      Utils.createBucket(app, { name: 'test' }, function(err, bucket) {
+        Utils.createItem(app, { name: 'test', bucket_id: bucket.id, bucket_name: bucket.name }, function(err, item) {
           Bucket = bucket;
           Item = item;
           done();
         });
       });
     });
-  });
-
-  after(function() {
-    helpers.clearData(app, ['buckets', 'items', 'item_properties']);
   });
 
   describe('#create', function() {

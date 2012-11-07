@@ -9,13 +9,11 @@
     "vanetix <matmcfarland@gmail.com>"
   ],
   "url": "https://github.com/particlebanana/Content-Server",
-  "keywords": ["content api", "cardcatalog"],
+  "keywords": ["content api"],
   "license" : "MIT",
   "dependencies": {
     "trapperkeeper": "0.0.x",
-    "cardcatalog": "0.0.x",
-    "schoolyard-recess": "0.0.x",
-    "connect": "2.6.x",
+    "express": "3.0.x",
     "validator": "0.4.x",
     "slug": "0.2.x",
     "pause": "0.0.x",

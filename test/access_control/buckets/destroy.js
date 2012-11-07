@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -9,14 +9,15 @@ describe('Access Control', function() {
       var app;
 
       before(function(done) {
-        helpers.buildServer(function(connection, server) {
+        Utils.createApplication(function(server) {
           app = server;
 
-          app.before(function(req, res, next) {
+          app.use(function(req, res, next) {
             req.user = {role: 2};
             next();
           });
 
+          app.initializeRoutes();
           done();
         });
       });
@@ -35,14 +36,15 @@ describe('Access Control', function() {
       var app;
 
       before(function(done) {
-        helpers.buildServer(function(connection, server) {
+        Utils.createApplication(function(server) {
           app = server;
 
-          app.before(function(req, res, next) {
+          app.use(function(req, res, next) {
             req.user = {role: 1};
             next();
           });
 
+          app.initializeRoutes();
           done();
         });
       });

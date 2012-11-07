@@ -1,12 +1,12 @@
 var fixtures = require('../../support/fixtures'),
     should = require('should');
 
-describe('ItemProperty', function() {
-  var ItemProperty;
+describe('Property', function() {
+  var Property;
 
   before(function(done) {
-    fixtures.ItemProperty(function(model) {
-      ItemProperty = model;
+    fixtures.Property(function(model) {
+      Property = model;
       done();
     });
   });
@@ -14,12 +14,12 @@ describe('ItemProperty', function() {
   describe('constructor', function() {
 
     it('should setup a db connection', function() {
-      var record = new ItemProperty();
+      var record = new Property();
       should.exist(record._resource);
     });
 
     it('should set default attributes', function() {
-      var record = new ItemProperty(),
+      var record = new Property(),
       attrs = {
         item_id: '',
         key: '',
@@ -35,7 +35,7 @@ describe('ItemProperty', function() {
 
   describe('setter', function() {
     it('should set attributes', function() {
-      var record = new ItemProperty();
+      var record = new Property();
       record.set({ key: 'name', value: 'test' });
       record._attributes.key.should.equal('name');
     });
@@ -45,7 +45,7 @@ describe('ItemProperty', function() {
     var record;
 
     before(function() {
-      record = new ItemProperty();
+      record = new Property();
       record.set({key: 'name', value: 'test'});
     });
 

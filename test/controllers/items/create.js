@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,24 +6,22 @@ describe('Items', function() {
   var app, bucket;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
+
       // Create a bucket to use for item tests
-      helpers.createBucket(app, { name: 'test' }, function(err, result) {
+      Utils.createBucket(app, { name: 'test' }, function(err, result) {
         bucket = result;
         done();
       });
     });
-  });
-
-  after(function() {
-    helpers.clearData(app, ['buckets', 'items']);
   });
 
   describe('#create', function() {
@@ -41,7 +39,7 @@ describe('Items', function() {
       var response;
 
       // Make the request and store the response
-      beforeEach(function(done) {
+      before(function(done) {
         request(app)
         .post('/api/v1/buckets/' + bucket.name + '/items')
         .send({ name: 'test item' })

@@ -1,40 +1,58 @@
-var connect = require('connect'),
-    recess = require('schoolyard-recess'),
-    db = require('./lib/utils/dbConnect'),
-    bootstrap = require('./lib/utils/bootstrapCategory'),
+var app,
+    adapters,
+    express = require('express'),
+    TK = require('trapperkeeper'),
+    addons = require('./lib/utils/addons'),
     cors_middleware = require('./lib/middleware/cors'),
-    hmac_middleware = require('./lib/middleware/hmac_check'),
-    api_v1_card = require('./lib/v1'),
-    app;
+    hmac_middleware = require('./lib/middleware/hmac_check');
 
-db.connect(function(err, adapters) {
+// Define database adapters
+adapters = {
+  mongo: TK.connect('mongodb', 'mongodb://127.0.0.1', 27017, { database: 'txssc-content'})
+};
 
-  // Create an app instance
-  app = recess();
+// Create an app instance
+app = express();
 
-  // Card Catalog Options
-  app.set('connection', adapters.mongo);
-  app.set('namespace', 'categories');
-  app.set('adapters', adapters);
+// Add `app.map` to the app
+addons.map.call(app);
 
-  // Middleware
-  app.before(cors_middleware);
-  app.before(hmac_middleware(adapters.mongo));
-  app.before(connect.json());
-  app.before(connect.urlencoded());
+//Set the adapters on the app instance
+app.set('adapters', adapters);
 
-  // API Card
-  app.card(api_v1_card);
+// Middleware
+app.use(cors_middleware);
+app.use(hmac_middleware(adapters.mongo));
+app.use(express.json());
+app.use(express.urlencoded());
 
-  app.on('ready', function() {
-    app.listen(process.env.PORT || 3000);
-    console.log('Listening on port ' + (process.env.PORT || 3000));
-  });
-
-  bootstrap(adapters.mongo, function(err) {
-    if(err) throw error(err);
-
-    // Create the card catalog
-    app.create();
-  });
+// Add routes
+app.map({
+  '/api': {
+    '/v1': require('./lib/').v1(app)
+  }
 });
+
+waitForReady(adapters.mongo, function() {
+  // Start listening once the mongo adapter is ready
+  app.listen(process.env.PORT || 3000);
+  console.log('Listening on port ' + (process.env.PORT || 3000));
+});
+
+/**
+ * Helper function to start the server once `what`
+ *  has fired a `ready` event.
+ */
+
+function waitForReady(what, callback) {
+  var ready = false;
+
+  what.on('ready', function() {
+    ready = true;
+  });
+
+  (function checkReady(callback) {
+    if(ready) return callback();
+    process.nextTick(checkReady.bind(null, callback));
+  }).call(null, callback);
+}

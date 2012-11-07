@@ -1,12 +1,12 @@
 var fixtures = require('../../support/fixtures'),
     should = require('should');
 
-describe('ItemProperty', function() {
-  var ItemProperty;
+describe('Property', function() {
+  var Property;
 
   before(function(done) {
-    fixtures.ItemProperty(function(model) {
-      ItemProperty = model;
+    fixtures.Property(function(model) {
+      Property = model;
       done();
     });
   });
@@ -16,7 +16,7 @@ describe('ItemProperty', function() {
 
     before(function(done) {
       var attrs = { item_id: '123', key: 'name', value: 'test' };
-      record = new ItemProperty(attrs);
+      record = new Property(attrs);
       record.save(done);
     });
 
@@ -33,7 +33,7 @@ describe('ItemProperty', function() {
 
     describe('invalid attributes', function() {
       before(function(done) {
-        ItemProperty.create({ item_id: '123', key: 'name' }, done);
+        Property.create({ item_id: '123', key: 'name' }, done);
       });
 
       it('should validate with error', function(done) {

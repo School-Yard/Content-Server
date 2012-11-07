@@ -1,4 +1,4 @@
-var helpers = require('../../support/helpers'),
+var Utils = require('../../support/utils'),
     request = require('supertest'),
     should = require('should');
 
@@ -6,17 +6,19 @@ describe('Properties', function() {
   var app, Bucket, Item, Property;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
       app = server;
 
-      app.before(function(req, res, next) {
+      app.use(function(req, res, next) {
         req.user = {role: 10}; // don't test access control here
         next();
       });
 
+      app.initializeRoutes();
+
       // Create a bucket to use for item tests
-      helpers.createBucket(app, { name: 'test' }, function(err, bucket) {
-        helpers.createItem(app, { name: 'test', bucket_id: bucket.id, bucket_name: bucket.name }, function(err, item) {
+      Utils.createBucket(app, { name: 'test' }, function(err, bucket) {
+        Utils.createItem(app, { name: 'test', bucket_id: bucket.id, bucket_name: bucket.name }, function(err, item) {
           Bucket = bucket;
           Item = item;
           done();
@@ -25,17 +27,13 @@ describe('Properties', function() {
     });
   });
 
-  after(function() {
-    helpers.clearData(app, ['buckets', 'items', 'item_properties']);
-  });
-
   describe('#destroy', function() {
     var Property;
 
     before(function(done) {
       var props = { key: 'key1', value: 'value1'};
 
-      helpers.createItemProperties(app, { bucket_name: Bucket.name, item_name: Item.name, body: props }, function(err, prop) {
+      Utils.createProperty(app, { bucket_name: Bucket.name, item_name: Item.name, body: props }, function(err, prop) {
         if(err) return done(err);
         Property = prop;
         done();
@@ -47,7 +45,7 @@ describe('Properties', function() {
 
       before(function(done) {
         request(app)
-        .del('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties/100')
+        .del('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties/invalid')
         .end(function(err, res){
           response = res;
           done();

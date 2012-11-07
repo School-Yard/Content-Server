@@ -1,4 +1,4 @@
-var helpers = require('../support/helpers'),
+var Utils = require('../support/utils'),
     request = require('supertest'),
     should = require('should');
     crypto = require('crypto'),
@@ -8,15 +8,19 @@ describe('middleware', function() {
   var app;
 
   before(function(done) {
-    helpers.buildServer(function(connection, server) {
+    Utils.createApplication(function(server) {
+      var adapters = server.get('adapters');
+
       app = server;
 
       // Use HMAC middleware
-      app.before(hmac(app.conn));
-      app.before(function(req, res, next) {
+      app.use(hmac(adapters.mongo));
+      app.use(function(req, res, next) {
         req.user.role.should.equal(1);
         next();
       });
+
+      app.initializeRoutes();
 
       done();
     });
@@ -27,7 +31,8 @@ describe('middleware', function() {
 
     before(function(done) {
       // Create a user
-      var user = app.conn.resource('users');
+      var connection = app.get('adapters').mongo;
+      var user = connection.resource('users');
       var data = {
         email: 'test@test.com',
         role: '1',

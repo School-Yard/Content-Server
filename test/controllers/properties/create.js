@@ -43,10 +43,10 @@ describe('Properties', function() {
         var response;
 
         // Make the request and store the response
-        beforeEach(function(done) {
+        before(function(done) {
           request(app)
           .post('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties')
-          .send({ key: 'key', value: 'val' })
+          .send({ key: 'name', value: 'val' })
           .set('content-type', 'application/json')
           .end(function(err, res) {
             response = res;
@@ -75,7 +75,7 @@ describe('Properties', function() {
         var response;
 
         // Make the request and store the response
-        beforeEach(function(done) {
+        before(function(done) {
           request(app)
           .post('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties')
           .send([{ key: 'key', value: 'val' }, { key: 'key2', val: 'val2'}])
@@ -109,7 +109,7 @@ describe('Properties', function() {
       var response;
 
       // Make the request and store the response
-      beforeEach(function(done) {
+      before(function(done) {
         request(app)
         .post('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties')
         .send({ key: '', value: 'val' })

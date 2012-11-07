@@ -92,7 +92,7 @@ describe('Properties', function() {
         var response;
 
         // Make the request and store the response
-        beforeEach(function(done) {
+        before(function(done) {
           request(app)
           .put('/api/v1/buckets/' + Bucket.name + '/items/' + Item.name + '/properties')
           .send([{ key: 'key1', value: 'value1 updated' }, { key: 'key2', value: 'value2 updated'}])

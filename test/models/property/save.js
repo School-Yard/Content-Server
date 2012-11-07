@@ -1,12 +1,12 @@
 var fixtures = require('../../support/fixtures'),
     should = require('should');
 
-describe('ItemProperty', function() {
-  var ItemProperty;
+describe('Property', function() {
+  var Property;
 
   before(function(done) {
-    fixtures.ItemProperty(function(model) {
-      ItemProperty = model;
+    fixtures.Property(function(model) {
+      Property = model;
       done();
     });
   });
@@ -18,7 +18,7 @@ describe('ItemProperty', function() {
 
       before(function(done) {
         var attrs = { item_id: '123', key: 'name' };
-        record = new ItemProperty(attrs);
+        record = new Property(attrs);
         record.save(done);
       });
 
@@ -35,9 +35,9 @@ describe('ItemProperty', function() {
       var record;
 
       beforeEach(function(done) {
-        ItemProperty.create({ item_id: '123', key: 'name' }, function(err, result) {
+        Property.create({ item_id: '123', key: 'name' }, function(err, result) {
           var attrs = { id: 2, item_id: '123', key: 'name' };
-          record = new ItemProperty(attrs);
+          record = new Property(attrs);
           done();
         });
       });

@@ -1,12 +1,12 @@
 var fixtures = require('../../support/fixtures'),
     should = require('should');
 
-describe('ItemProperty', function() {
-  var ItemProperty;
+describe('Property', function() {
+  var Property;
 
   before(function(done) {
-    fixtures.ItemProperty(function(model) {
-      ItemProperty = model;
+    fixtures.Property(function(model) {
+      Property = model;
       done();
     });
   });
@@ -18,7 +18,7 @@ describe('ItemProperty', function() {
         var record;
 
         before(function() {
-          record = new ItemProperty();
+          record = new Property();
         });
 
         it('should return an error', function(done) {
@@ -33,14 +33,14 @@ describe('ItemProperty', function() {
 
       describe('with duplicate key', function(done) {
         before(function(done) {
-          ItemProperty.create({ item_id: '123', key: 'test key', value: 'test value' },
+          Property.create({ item_id: '123', key: 'test key', value: 'test value' },
             function(err, result) {
               done(err);
           });
         });
 
         it('should return an error', function(done) {
-          ItemProperty.create({ item_id: '123', key: 'test key', value: 'another test value'},
+          Property.create({ item_id: '123', key: 'test key', value: 'another test value'},
             function(err, prop) {
               should.exist(err);
               err.message.should.equal('Key must be unique');
@@ -55,7 +55,7 @@ describe('ItemProperty', function() {
       var record;
 
       before(function() {
-        record = new ItemProperty();
+        record = new Property();
       });
 
       it('should not return an error', function(done) {

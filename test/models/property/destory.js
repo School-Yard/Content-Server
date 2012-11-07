@@ -1,12 +1,12 @@
 var fixtures = require('../../support/fixtures'),
     should = require('should');
 
-describe('ItemProperty', function() {
-  var ItemProperty;
+describe('Property', function() {
+  var Property;
 
   before(function(done) {
-    fixtures.ItemProperty(function(model) {
-      ItemProperty = model;
+    fixtures.Property(function(model) {
+      Property = model;
       done();
     });
   });
@@ -15,7 +15,7 @@ describe('ItemProperty', function() {
     var record;
 
     before(function(done) {
-      record = new ItemProperty({ item_id: '123', key: 'test' });
+      record = new Property({ item_id: '123', key: 'test' });
       record.save(done);
     });
 
@@ -25,7 +25,7 @@ describe('ItemProperty', function() {
       record.destroy(function(err, status) {
         status.should.equal(1);
 
-        ItemProperty.get(id, function(err, result) {
+        Property.get(id, function(err, result) {
           should.not.exist(err);
           should.not.exist(result);
           done();

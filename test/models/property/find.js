@@ -1,12 +1,12 @@
 var fixtures = require('../../support/fixtures'),
     should = require('should');
 
-describe('ItemProperty', function() {
-  var ItemProperty;
+describe('Property', function() {
+  var Property;
 
   before(function(done) {
-    fixtures.ItemProperty(function(model) {
-      ItemProperty = model;
+    fixtures.Property(function(model) {
+      Property = model;
       done();
     });
   });
@@ -14,7 +14,7 @@ describe('ItemProperty', function() {
   describe('.find', function() {
 
     it('should return an array', function(done) {
-      ItemProperty.find({}, function(err, results) {
+      Property.find({}, function(err, results) {
         results.should.be.an.instanceOf(Array);
         done();
       });
@@ -23,14 +23,14 @@ describe('ItemProperty', function() {
     describe('by attribute', function() {
 
       before(function(done) {
-        var record = new ItemProperty();
+        var record = new Property();
         record._resource.create({ key: 'name', value: 'test'}, function(err, result) {
           done(err);
         });
       });
 
       it('should return an array with matches', function(done) {
-        ItemProperty.find({ key: 'name'}, function(err, results) {
+        Property.find({ key: 'name'}, function(err, results) {
           results.should.be.an.instanceOf(Array);
           results.length.should.equal(1);
           results[0].get('key').should.equal('name');

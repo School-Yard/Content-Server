@@ -34,7 +34,7 @@ describe('Items', function(done) {
       before(function(done) {
         var props = { key: 'key1', value: 'value1'};
 
-        Utils.createItemProperties(app, { bucket_name: Bucket.name, item_name: Item.name, body: props }, function(err, property) {
+        Utils.createProperty(app, { bucket_name: Bucket.name, item_name: Item.name, body: props }, function(err, property) {
           if(err) return done(err);
 
           request(app)

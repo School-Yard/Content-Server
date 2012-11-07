@@ -92,17 +92,17 @@ Utils.createItem = function(app, attrs, callback) {
   });
 };
 
-Utils.createItemProperties = function(app, attrs, callback) {
+Utils.createProperty = function(app, attrs, callback) {
   if(!attrs.bucket_name) {
-    return callback(new Error('A bucket_name attribute is required for the createItemProperties helper'));
+    return callback(new Error('A bucket_name attribute is required for the createProperty helper'));
   }
 
   if(!attrs.item_name) {
-    return callback(new Error('A item_name attribute is required for the createItemProperties helper'));
+    return callback(new Error('A item_name attribute is required for the createProperty helper'));
   }
 
   if(!attrs.body) {
-    return callback(new Error('A body attribute is required for the createItemProperties helper'));
+    return callback(new Error('A body attribute is required for the createProperty helper'));
   }
 
   request(app)

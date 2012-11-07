@@ -45,7 +45,7 @@ describe('Properties', function() {
           { key: 'key2', value: 'value2'}
         ];
 
-        Utils.createItemProperties(app, { bucket_name: Bucket.name, item_name: Item.name, body: props }, function(err, result) {
+        Utils.createProperty(app, { bucket_name: Bucket.name, item_name: Item.name, body: props }, function(err, result) {
           if(err) return done(err);
           done();
         });

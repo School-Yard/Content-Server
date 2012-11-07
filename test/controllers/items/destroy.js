@@ -21,7 +21,7 @@ describe('Items', function() {
       // Create a bucket to use for item tests
       Utils.createBucket(app, { name: 'test' }, function(err, bucket) {
         Utils.createItem(app, { name: 'test', bucket_id: bucket.id, bucket_name: bucket.name }, function(err, item) {
-          Utils.createItemProperties(app, { bucket_name: bucket.name, item_name: item.name, body: props }, function(err, props) {
+          Utils.createProperty(app, { bucket_name: bucket.name, item_name: item.name, body: props }, function(err, props) {
             Bucket = bucket;
             Item = item;
             Props = props;

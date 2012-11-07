@@ -1,7 +1,7 @@
 var connectDb = require('./utils').connectDb,
     BucketModel = require('../../lib/v1/models/bucket'),
     ItemModel = require('../../lib/v1/models/item'),
-    ItemPropertyModel = require('../../lib/v1/models/itemproperty');
+    PropertyModel = require('../../lib/v1/models/property');
 
 /**
  * Fixtures
@@ -23,9 +23,9 @@ exports.Item = function(callback) {
   });
 };
 
-exports.ItemProperty = function(callback) {
+exports.Property = function(callback) {
   connectDb(function(connection) {
-    var model = new ItemPropertyModel(connection);
+    var model = new PropertyModel(connection);
     return callback(model);
   });
 };

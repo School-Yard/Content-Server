@@ -97,7 +97,7 @@ describe('Items', function(done) {
         // Hack to get around before/after issues
         Utils.createBucket(app, { name: 'test-prop' }, function(err, bucket) {
           Utils.createItem(app, { bucket_name: bucket.name, bucket_id: bucket.id, name: 'test-prop' }, function(err, item) {
-            Utils.createItemProperties(app, { bucket_name: bucket.name, item_name: item.name, body: props }, function(err, result) {
+            Utils.createProperty(app, { bucket_name: bucket.name, item_name: item.name, body: props }, function(err, result) {
               if(err) return done(err);
 
               request(app)
